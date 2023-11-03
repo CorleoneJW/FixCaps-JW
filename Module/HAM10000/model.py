@@ -273,7 +273,7 @@ def make_features(cfg: list,f_c,out_c=None,g=1,step=2):
         elif v == "C":
             layers += [nn.Conv2d(f_channels,f_channels,3,stride=step)]
         else:
-            layers += [nn.Conv2d(f_channels, v, 18,stride=step,groups=g)]
+            layers += [nn.Conv2d(f_channels, v, 29,stride=step,groups=g)]
             f_channels = v
     return nn.Sequential(*layers)
 
