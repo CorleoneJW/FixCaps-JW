@@ -5,6 +5,7 @@ import prettytable
 import matplotlib.pyplot as plt
 from thop.profile import profile
 import time
+from sklearn.metrics import roc_auc_score
 
 class  ImageShow(object):
     def __init__(self,
@@ -172,15 +173,22 @@ def confusion_matrix(evl_result,n_cla,cla_dict,data,img_title=None,suf=None):
     
 def metrics_scores(evl_result,n_classes,cla_dict):
     result_table = prettytable.PrettyTable()
-    result_table.field_names = ['Type','Precision', 'Recall', 'F1','Accuracy']    
-    accuracy = float(torch.sum(evl_result.diagonal())/torch.sum(evl_result))  
+    result_table.field_names = ['Type','Precision', 'Recall', 'F1','Accuracy','AUC']    
+    accuracy = float(torch.sum(evl_result.diagonal())/torch.sum(evl_result))
+    #calculate AUC
+    TP = torch.sum(evl_result.diagonal())
+    FP = 
+    TN = 
+    TP = 
+    AUC = float(torch.sum)
     for i in range(n_classes):
         pre = float(evl_result[i][i] / torch.sum(evl_result,0)[i])
         recall = float(evl_result[i][i] / torch.sum(evl_result,1)[i])
         F1 = pre * recall * 2 / (pre + recall + 1e-8)
-        result_table.add_row([cla_dict[i], round(pre, 4), round(recall, 3), round(F1, 3)," "])
+        result_table.add_row([cla_dict[i], round(pre, 4), round(recall, 3), round(F1, 3)," "," "])
 
-    result_table.add_row(["Total:", " ", " ", " ",round(accuracy,4)])
+    result_table.add_row(["Total:", " ", " ", " "," ",round(AUC,4)])
+    result_table.add_row(["Total:", " ", " ", " ",round(accuracy,4)," "])
     print(result_table)
 
 def one_hot(x, length):
