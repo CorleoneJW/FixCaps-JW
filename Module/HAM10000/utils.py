@@ -176,18 +176,23 @@ def metrics_scores(evl_result,n_classes,cla_dict):
     result_table.field_names = ['Type','Precision', 'Recall', 'F1','Accuracy','AUC']    
     accuracy = float(torch.sum(evl_result.diagonal())/torch.sum(evl_result))
     #calculate AUC
-    TP = torch.sum(evl_result.diagonal())
-    FP = 
-    TN = 
-    TP = 
-    AUC = float(torch.sum)
+    total_AUC = 0.0
     for i in range(n_classes):
-        pre = float(evl_result[i][i] / torch.sum(evl_result,0)[i])
-        recall = float(evl_result[i][i] / torch.sum(evl_result,1)[i])
+        TP = evl_result[i][i]
+        TP_FP = torch.sum(evl_result,0)[i]
+        TP_FN = torch.sum(evl_result,1)[i]
+        FP = TP_FP - TP
+        FP_TN = FP + torch.sum(evl_result.diagonal()) - TP
+        TPR = TP / TP_FN
+        FPR = FP / FP_TN
+        pre = float(TP / TP_FP)
+        recall = float(TP / TP_FN)
         F1 = pre * recall * 2 / (pre + recall + 1e-8)
-        result_table.add_row([cla_dict[i], round(pre, 4), round(recall, 3), round(F1, 3)," "," "])
-
-    result_table.add_row(["Total:", " ", " ", " "," ",round(AUC,4)])
+        AUC = 0.5 * (TPR + 1 - FPR)
+        total_AUC += AUC
+        result_table.add_row([cla_dict[i], round(pre, 4), round(recall, 3), round(F1, 3)," ",AUC])
+    avg_AUC = total_AUC / n_classes
+    result_table.add_row(["Total:", " ", " ", " "," ",round(avg_AUC,4)])
     result_table.add_row(["Total:", " ", " ", " ",round(accuracy,4)," "])
     print(result_table)
 
