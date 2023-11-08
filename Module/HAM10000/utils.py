@@ -189,9 +189,10 @@ def metrics_scores(evl_result,n_classes,cla_dict):
         recall = float(TP / TP_FN)
         F1 = pre * recall * 2 / (pre + recall + 1e-8)
         AUC = 0.5 * (TPR + 1 - FPR)
+        AUC = float(AUC)
         total_AUC += AUC
-        result_table.add_row([cla_dict[i], round(pre, 4), round(recall, 3), round(F1, 3)," ",AUC])
-    avg_AUC = total_AUC / n_classes
+        result_table.add_row([cla_dict[i], round(pre, 4), round(recall, 3), round(F1, 3)," ",round(AUC,4)])
+    avg_AUC = float(total_AUC / n_classes)
     result_table.add_row(["Total:", " ", " ", " "," ",round(avg_AUC,4)])
     result_table.add_row(["Total:", " ", " ", " ",round(accuracy,4)," "])
     print(result_table)
